@@ -92,7 +92,7 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       % Visualize result
       if rem(counter, 10) == 0
         setOrientation(ownView, x(1:4));
-        title(ownView, 'OWN', 'FontSize', 16);
+        title(ownView, 'OWN' , 'FontSize', 16);
         if ~any(isnan(orientation))
           if isempty(googleView)
             subplot(1, 2, 2);
@@ -109,7 +109,7 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       xhat.x(:, end+1) = x;
       xhat.P(:, :, end+1) = P;
       xhat.t(end+1) = t - t0;
-
+                            
       meas.t(end+1) = t - t0;
       meas.acc(:, end+1) = acc;
       meas.gyr(:, end+1) = gyr;

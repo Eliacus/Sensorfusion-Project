@@ -1,0 +1,1 @@
+[xhat, meas] = filterTemplate(); % save data
