@@ -79,7 +79,9 @@ function [xhat, meas] = filterTemplate2(calAcc, calGyr, calMag)
       end
       gyr = data(1, 5:7)';
       if ~any(isnan(gyr))  % Gyro measurements are available.
-        % Do something
+          [xk, P] = tu_qw(xk, P, gyr, 0.05, cov_gyr);
+          [xk, P] = mu_normalize(xk, P);
+          x = q2euler(xk);
       end
 
       mag = data(1, 8:10)';
