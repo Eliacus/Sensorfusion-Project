@@ -1,4 +1,4 @@
-function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
+function [xhat, meas] = filterTemplate7(calAcc, calGyr, calMag)
 % FILTERTEMPLATE  Filter template
 %
 % This is a template function for how to collect and filter data
@@ -26,7 +26,12 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
   %% Filter settings
   t0 = [];  % Initial time (initialize on first data received)
   nx = 4;   % Assuming that you use q as state variable.
+  
   % Add your filter settings here.
+  Rw = 1.0e-06.*diag([0.3134,0.2919,0.5301]);
+  Ra = 1.0e-03.*diag([0.3052,0.2217,0.1234]);
+  g0 = [0.0657;-0.1461;9.9522];
+  outlier_rejection_factor = 0.35;
 
   % Current filter state.
   x = [1; 0; 0 ;0];
@@ -74,12 +79,22 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       end
 
       acc = data(1, 2:4)';
-      if ~any(isnan(acc))  % Acc measurements are available.
-        % Do something
-      end
+      if ~any(isnan(acc)) 
+         if norm(acc)<9.81*(1+outlier_rejection_factor) && norm(acc)>(1-outlier_rejection_factor)  % Acc measurements are available and checking the norm of the accelerometer measurements.
+            [x, P] = mu_g(x, P, acc, Ra, g0);
+            accOut = 0;
+         else
+            accOut = 1;
+         end
+       end
+      
       gyr = data(1, 5:7)';
       if ~any(isnan(gyr))  % Gyro measurements are available.
-        % Do something
+          [x, P] = tu_qw(x, P, gyr, t-t0-meas.t(end), Rw); 
+          [x, P] = mu_normalizeQ(x,P);
+      else
+            %P = P+eye(4)*0.01;
+            P= randomWalk(P);
       end
 
       mag = data(1, 8:10)';
@@ -92,6 +107,7 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       % Visualize result
       if rem(counter, 10) == 0
         setOrientation(ownView, x(1:4));
+        ownView.setAccDist(accOut);
         title(ownView, 'OWN', 'FontSize', 16);
         if ~any(isnan(orientation))
           if isempty(googleView)

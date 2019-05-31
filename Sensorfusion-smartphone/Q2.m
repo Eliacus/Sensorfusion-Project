@@ -96,19 +96,13 @@ legend('Histogram of x-measurement','Normal PDF of x-measurements','Interpreter'
 title('Magnetometer')
 
 %%
-
-[test, test2] = filterTemplate2();
-
-
-
-
-
-
-
-
-
-
-
+clear all 
+close all
+clc
+showIP();
+startup();
+%[test, test2] = filterTemplate46();
+[test, test2] = filterTemplate9();
 
 
 

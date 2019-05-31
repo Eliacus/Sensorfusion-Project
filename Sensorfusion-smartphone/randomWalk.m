@@ -1,7 +1,5 @@
-function [x, P] = randomWalk(x, P, T, Rw)
+function [P] = randomWalk(P)
 
-G = T.*eye(3);
-
-P = P+G*Rw*G';
+P = P+eye(4)*0.01
 
 end

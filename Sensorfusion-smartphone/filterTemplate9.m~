@@ -1,4 +1,4 @@
-function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
+function [xhat, meas] = filterTemplate9(calAcc, calGyr, calMag)
 % FILTERTEMPLATE  Filter template
 %
 % This is a template function for how to collect and filter data
@@ -26,7 +26,19 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
   %% Filter settings
   t0 = [];  % Initial time (initialize on first data received)
   nx = 4;   % Assuming that you use q as state variable.
+  
   % Add your filter settings here.
+  Rw = 1.0e-06.*diag([0.3134,0.2919,0.5301]);
+  Ra = 1.0e-03.*diag([0.3052,0.2217,0.1234]);
+  g0 = [0.0657;-0.1461;9.9522];
+  outlier_rejection_factor = 0.35;
+  Rm = diag([0.2075 0.1622 0.2881]);
+  mean_mag = [41.5659;-4.2069;-41.2221];
+  m0 = [0; sqrt(mean_mag(1)^2+mean_mag(2)^2); mean_mag(3)];
+  L = norm(m0);
+  alpha = 0.01;
+  accOut=1;
+  magOut=1;
 
   % Current filter state.
   x = [1; 0; 0 ;0];
@@ -74,24 +86,42 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       end
 
       acc = data(1, 2:4)';
-      if ~any(isnan(acc))  % Acc measurements are available.
-        % Do something
-      end
+      if ~any(isnan(acc)) 
+         if norm(acc)<9.81*(1+outlier_rejection_factor) && norm(acc)>(1-outlier_rejection_factor)  % Acc measurements are available and checking the norm of the accelerometer measurements.
+            [x, P] = mu_g(x, P, acc, Ra, g0);
+            accOut = 0;
+         else
+            accOut = 1;
+         end
+       end
+      
       gyr = data(1, 5:7)';
       if ~any(isnan(gyr))  % Gyro measurements are available.
-        % Do something
+          [x, P] = tu_qw(x, P, gyr, t-t0-meas.t(end), Rw); 
+          [x, P] = mu_normalizeQ(x,P);
+      else
+            P= randomWalk(P);
       end
 
       mag = data(1, 8:10)';
       if ~any(isnan(mag))  % Mag measurements are available.
-        % Do something
-      end
+            L = (1-alpha)*L+alpha*norm(mag);
+            if L>40 && L<70
+            [x, P] = mu_m(x, P, mag, m0, Rm);
+            [x, P] = mu_normalizeQ(x,P);
+            magOut = 0;
+            else 
+            magOut = 1;
+            end
+       end
 
       orientation = data(1, 18:21)';  % Google's orientation estimate.
 
       % Visualize result
       if rem(counter, 10) == 0
         setOrientation(ownView, x(1:4));
+        ownView.setAccDist(accOut);
+        ownView.setMagDist(magOut); %KOMMER KNULLA DENNA FUNKTIONENS MAMMA.
         title(ownView, 'OWN', 'FontSize', 16);
         if ~any(isnan(orientation))
           if isempty(googleView)
