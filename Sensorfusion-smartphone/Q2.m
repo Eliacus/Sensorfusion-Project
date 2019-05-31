@@ -34,7 +34,7 @@ cov_mag = cov(mag');
 figure(1); hold on
 % Accelerometer plot
 subplot(3,1,1)
-plot(t_acc,acc(1,:))
+plot(t_acc,acc(3,:))
 xlim([0 t_acc(end)])
 xlabel('Time [s]','Interpreter','latex')
 ylabel('Acceleration [$m/s^2$]','Interpreter','latex')
