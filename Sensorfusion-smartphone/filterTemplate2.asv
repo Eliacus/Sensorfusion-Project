@@ -84,9 +84,9 @@ function [xhat, meas] = filterTemplate2(calAcc, calGyr, calMag)
       gyr = data(1, 5:7)';
       if ~any(isnan(gyr))  % Gyro measurements are available.
           [x, P] = tu_qw(xhat.x(:, end), P, gyr,t-t0-meas.t(end) , Rw);
-%           [x, P] = mu_normalize(x, P);
+          [x, P] = mu_normalize(x, P);
       else
-%           [x, P] = randomWalk(x, P, t-t0-meas.t(end), Rw);
+          [x, P] = randomWalk(x, P, T, Rw);
 
       end
 

@@ -95,7 +95,9 @@ ylabel('Probability density')
 legend('Histogram of x-measurement','Normal PDF of x-measurements','Interpreter','latex')
 title('Magnetometer')
 
+%%
 
+[test, test2] = filterTemplate2();
 
 
 
