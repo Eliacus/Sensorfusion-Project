@@ -28,7 +28,7 @@ function [xhat, meas] = filterTemplate46(calAcc, calGyr, calMag)
   nx = 4;   % Assuming that you use q as state variable.
   
   % Add your filter settings here.
-  Rw = 1.0e-06.*diag([0.3134,0.2919,0.5301]);
+  Rw = 1.0e-06.*diag([0.4318,0.8781,0.2957]);
   Ra = 1.0e-03.*diag([0.3052,0.2217,0.1234]);
   g0 = [0.0657;-0.1461;9.9522];
   outlier_rejection_factor = 0.35;

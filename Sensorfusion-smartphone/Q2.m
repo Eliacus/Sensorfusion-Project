@@ -111,32 +111,37 @@ close all
 clc
 showIP();
 startup();
-%[test, test2] = filterTemplate46();
-[own,google] = filterTemplate9();
+[test, test2] = filterTemplate46();
+%[own,google] = filterTemplate9();
 %[test, test2] = filterTemplate();
 %% q to Euler: 
 close all;
 % Clear all NaN values
-acc = own.x(:,~any(isnan(own.x),1));
-gyr = google.orient(:,~any(isnan(google.orient),1));
+own_clean = own.x(:,~any(isnan(own.x),1));
+google_clean = google.orient(:,~any(isnan(google.orient),1));
+t_own = own.t(:,~any(isnan(own.x),1));
+t_google = google.t(:,~any(isnan(google.orient),1));
 
-euler_own = q2euler(own.x);
-euler_google = q2euler(google.orient);
+
+%t=0:length(acc)
+
+euler_own = q2euler(own_clean);
+euler_google = q2euler(google_clean);
 
 subplot(1,3,1)
-plot(own.t,euler_own(1,:))
+plot(t_own,euler_own(1,:))
 hold on
-plot(google.t,euler_google(1,:))
+plot(t_google,euler_google(1,:))
 
 subplot(1,3,2)
-plot(own.t,euler_own(2,:))
+plot(t_own,euler_own(2,:))
 hold on
-plot(google.t,euler_google(2,:))
+plot(t_google,euler_google(2,:))
 
 subplot(1,3,3)
-plot(own.t,euler_own(3,:))
+plot(t_own,euler_own(3,:))
 hold on
-plot(google.t,euler_google(3,:))
+plot(t_google,euler_google(3,:))
 legend('own','google')
 
 
