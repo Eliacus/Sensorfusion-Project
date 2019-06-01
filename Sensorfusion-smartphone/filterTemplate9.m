@@ -29,7 +29,7 @@ function [xhat, meas] = filterTemplate9(calAcc, calGyr, calMag)
   
   % Add your filter settings here.
   %Old Q4
-  %Rw = 1.0e-06.*diag([0.3134,0.2919,0.5301]);
+%   Rw = 1.0e-06.*diag([0.3134,0.2919,0.5301]);
 %   Ra = 1.0e-03.*diag([0.3052,0.2217,0.1234]);
 %   g0 = [0.0657;-0.1461;9.9522];
 %   outlier_rejection_factor = 0.35;
@@ -41,8 +41,21 @@ function [xhat, meas] = filterTemplate9(calAcc, calGyr, calMag)
 %   accOut=1;
 %   magOut=1;
   
-  %New Q2
-  Rw =1.0e-06 * diag([0.4318,0.8781,0.2957];
+    %New Q2
+  Rw = 1.0e-06.*diag([0.4318,0.8781,0.2957]);
+  Ra = 1.0e-03.*diag([0.1431,0.2136,0.1694]);
+  g0 = [0.1489;0.1067;9.8363];
+  outlier_rejection_factor = 0.35;
+  Rm = diag([0.1894;0.1714;0.1826]);
+  mean_mag = [7.8887;1.4198;-44.4954];
+  m0 = [0; sqrt(mean_mag(1)^2+mean_mag(2)^2); mean_mag(3)];
+  L = norm(m0);
+  alpha = 0.01;
+  accOut=1;
+  magOut=1;
+  
+  
+  
   % Current filter state.
   x = [1; 0; 0 ;0];
   P = eye(nx, nx);
@@ -109,7 +122,7 @@ function [xhat, meas] = filterTemplate9(calAcc, calGyr, calMag)
       mag = data(1, 8:10)';
       if ~any(isnan(mag))  % Mag measurements are available.
             L = (1-alpha)*L+alpha*norm(mag);
-            if L>10 && L<100
+            if L>30 && L<60
             [x, P] = mu_m(x, P, mag, m0, Rm);
             [x, P] = mu_normalizeQ(x,P);
             magOut =0;

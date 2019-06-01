@@ -103,9 +103,11 @@ clc
 showIP();
 startup();
 %[test, test2] = filterTemplate46();
-[test, test2] = filterTemplate9();
+[own,google] = filterTemplate9();
 %[test, test2] = filterTemplate();
+%% q to Euler: 
 
+euler = q2euler(q.x);
 
 
 
