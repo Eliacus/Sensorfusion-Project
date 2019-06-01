@@ -94,7 +94,7 @@ function [xhat, meas] = filterTemplate7(calAcc, calGyr, calMag)
           [x, P] = mu_normalizeQ(x,P);
       else
             %P = P+eye(4)*0.01;
-            P= randomWalk(P);
+            P= randomWalk(P,t-t0-meas.t(end));
       end
 
       mag = data(1, 8:10)';

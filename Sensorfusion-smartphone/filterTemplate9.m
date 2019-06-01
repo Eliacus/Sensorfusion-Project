@@ -28,18 +28,21 @@ function [xhat, meas] = filterTemplate9(calAcc, calGyr, calMag)
   nx = 4;   % Assuming that you use q as state variable.
   
   % Add your filter settings here.
-  Rw = 1.0e-06.*diag([0.3134,0.2919,0.5301]);
-  Ra = 1.0e-03.*diag([0.3052,0.2217,0.1234]);
-  g0 = [0.0657;-0.1461;9.9522];
-  outlier_rejection_factor = 0.35;
-  Rm = diag([0.2075 0.1622 0.2881]);
-  mean_mag = [41.5659;-4.2069;-41.2221];
-  m0 = [0; sqrt(mean_mag(1)^2+mean_mag(2)^2); mean_mag(3)];
-  L = norm(m0);
-  alpha = 0.01;
-  accOut=1;
-  magOut=1;
-
+  %Old Q4
+  %Rw = 1.0e-06.*diag([0.3134,0.2919,0.5301]);
+%   Ra = 1.0e-03.*diag([0.3052,0.2217,0.1234]);
+%   g0 = [0.0657;-0.1461;9.9522];
+%   outlier_rejection_factor = 0.35;
+%   Rm = diag([0.2075 0.1622 0.2881]);
+%   mean_mag = [41.5659;-4.2069;-41.2221];
+%   m0 = [0; sqrt(mean_mag(1)^2+mean_mag(2)^2); mean_mag(3)];
+%   L = norm(m0);
+%   alpha = 0.01;
+%   accOut=1;
+%   magOut=1;
+  
+  %New Q2
+  Rw =1.0e-06 * diag([0.4318,0.8781,0.2957];
   % Current filter state.
   x = [1; 0; 0 ;0];
   P = eye(nx, nx);

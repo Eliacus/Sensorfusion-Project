@@ -1,6 +1,6 @@
 function [P] = randomWalk(P)
 
-T=0.01; %Period used in filter template.
+T=0.01;%Period used 
 P = P+eye(4)*T;
 
 end
