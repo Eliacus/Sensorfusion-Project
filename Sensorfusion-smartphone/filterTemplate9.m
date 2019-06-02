@@ -103,7 +103,7 @@ function [xhat, meas] = filterTemplate9(calAcc, calGyr, calMag)
 
       acc = data(1, 2:4)';
       if ~any(isnan(acc)) 
-         if norm(acc)<9.81*(1+outlier_rejection_factor) && norm(acc)>(1-outlier_rejection_factor)  % Acc measurements are available and checking the norm of the accelerometer measurements.
+         if norm(acc)<9.81*(1+outlier_rejection_factor) && norm(acc)>9.81*(1-outlier_rejection_factor)  % Acc measurements are available and checking the norm of the accelerometer measurements.
             [x, P] = mu_g(x, P, acc, Ra, g0);
             accOut = 0;
          else
